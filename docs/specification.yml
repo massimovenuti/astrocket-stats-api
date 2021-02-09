@@ -1,8 +1,8 @@
-openapi: "3.0.2"
+openapi: '3.0.2'
 info:
   title: Statistiques
-  description: API pour la gestion des statistiques joueurs pour le projet Asteroids Warrior
-  version: "1.0"
+  description: API pour la gestion des statistiques utilisateurs pour le projet Asteroids Warrior
+  version: '1.0'
 servers:
   - url: https://stats.aw.alexandre-vogel.fr/
 
@@ -13,11 +13,27 @@ servers:
 
 paths:
   /stats:
+    get:
+      tags :
+        - Statistiques
+      summary: Récupère les statistiques de tous les utilisateurs
+      description: Récupère les statistiques de tous les utilisateurs
+      responses: 
+        '200':
+          description: L'ensemble du classement a été récupéré et est transmis dans le corps du message
+          content:
+            json:
+              schema:
+                type: array
+                description: Ensemble des statistiques
+                items:
+                  $ref: '#/components/schemas/userStats'
+
     post:
       tags:
         - Statistiques
-      summary: Envoie une liste de statistiques joueurs
-      description: Envoie une liste de statistiques joueurs
+      summary: Envoie une liste de statistiques d'utilisateurs
+      description: Envoie une liste de statistiques d'utilisateurs
       parameters:
         - in: header
           name: serverToken
@@ -30,21 +46,76 @@ paths:
           json:
             schema:
               type: array
-              description: Liste de statistiques joueurs
+              description: Liste de statistiques utilisateurs
               items:
                 $ref: '#/components/schemas/userStats'
       responses:
-        "200":
+        '200':
           description: Envoi réalisé avec succès
-        "403":
-          description: Vous n'êtes pas autorisé à modifier ces statistiques
+        '400':
+          description: 'Requête invalide : vérifiez la syntaxe'
+        '403':
+          description: Vous n'êtes pas autorisé à modifier les statistiques
+
 
   /stats/{idUser}:
+    get:
+      tags:
+        - Statistiques
+      summary: Récupère les statistiques d'un utilisateur
+      description: Récupère les statistiques d'un utilisateur particulier
+      parameters: 
+        - name: idUser
+          in: path
+          description: ID de l'utilisateur
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: L'ensemble des statistiques utilisateur avec l'ID spécifié ont été récupérées
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/userStats'
+        '400':
+          description: 'Requête invalide : vérifiez la syntaxe'
+        '404':
+          description: L'utilisateur demandé n'a pas été trouvé
+
+    post:
+      tags:
+        - Statistiques
+      summary: Envoie les statistiques d'un utilisateur
+      description: Envoie les statistiques d'un utilisateur particulier
+      parameters: 
+        - in: header
+          name: serverToken
+          schema:
+            type: string
+          required: true
+          description: Token pour identifier le serveur
+        - name: idUser
+          in: path
+          description: Id de l'utilisateur concerné
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Les statistiques ont bien été envoyées
+        '400':
+          description: 'Requête invalide : vérifiez la syntaxe'
+        '403':
+          description: Vous n'êtes pas autorisé à modifier les statistiques
+        '404':
+          description: L'utilisateur demandé n'a pas été trouvé
+  
     put:
       tags:
         - Statistiques
-      summary: Modifie les statistiques d'un joueur
-      description: Modifie les statistiques d'un joueur
+      summary: Modifie les statistiques d'un utilisateur
+      description: Permet de modifier les statistiques d'un utilisateur particulier
       parameters:
         - in: header
           name: serverToken
@@ -57,27 +128,29 @@ paths:
           schema:
             type: string
           required: true
-          description: Id du joueur dont les statistiques doivent être modifiées
+          description: Id de l'utilisateur concerné
       requestBody:
         content:
           json:
             schema:
               $ref: '#/components/schemas/userStats'
       responses:
-        "200":
+        '200':
           description: Modification réalisée avec succès
-        "403":
-          description: "Vous n'êtes pas autorisé à modifier ces statistiques"
-        "404":
-          description: "L'utilisateur demandé n'a pas été trouvé"
+        '400':
+          description: 'Requête invalide : vérifiez la syntaxe'
+        '403':
+          description: Vous n'êtes pas autorisé à modifier les statistiques
+        '404':
+          description: L'utilisateur demandé n'a pas été trouvé
 
 
   /ranking/{stat}:
     get:
       tags:
         - Classement
-      summary: Récupère le classement des joueurs
-      description: Récupère le classement basé sur une statistique particulière
+      summary: Récupère le classement des utilisateurs
+      description: Récupère le classement des utilisateurs en fonction d'une statistique en particulier
       parameters:
         - in: path
           name: stat
@@ -91,7 +164,7 @@ paths:
             type: number
             minimum: 1
           required: false
-          description: Rang du premier joueur de la liste
+          description: Rang du premier utilisateur de la liste
         - in: query
           name: limit
           schema:
@@ -100,83 +173,17 @@ paths:
           required: false
           description: Taille de la liste
       responses:
-        "200":
+        '200':
           description: Le classement a été récupéré et est transmis dans le corps du message
           content:
             json:
               schema:
                 type: array
-                description: Classement des joueurs
+                description: Classement des utilisateurs
                 items: 
                   $ref: '#/components/schemas/userStats'
-        "400":
+        '400':
           description: "Requête invalide : l'un des champs est incorrect"
-          
-  /stats:
-    get:
-      tags :
-        - Statistiques
-      summary: Récupère les statistiques de tous les joueurs
-      description: Permet de récupérer l'ensemble des statistiques de tous les joueurs
-      responses: 
-        "200" :
-          description: L'ensemble du classement a été récupéré et est transmis dans le corps du message
-          content:
-            json:
-              schema:
-                type: array
-                description: Ensemble des statistiques
-                items:
-                  $ref: '#/components/schemas/userStats'
-  
-          
-  /stats/{idUser}:
-    get:
-      tags:
-        - Statistiques
-      summary: Récupère les statistiques d'un utilisateur
-      description: Permet de récupérer l'ensemble des statistiques d'un utilisateur 
-      parameters: 
-        - name: idUser
-          in: path
-          description: ID de l'utilisateur recherché
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: L'ensemble des statistiques du joueur avec l'ID spécifié ont été récupérées
-          content:
-            json:
-              schema:
-                $ref: '#/components/schemas/userStats'
-        "404":
-          description: L'utilisateur demandé n'a pas été trouvé
-        
-        
-    post:
-      tags:
-        - Statistiques
-      summary: Modifie les statistiques d'un utilisateur
-      description: Permet, à la fin d'une partie de mettre à jour les statistiques d'un utilisateur précis
-      parameters: 
-        - name: idUser
-          in: path
-          description: ID de l'utilisateur recherché
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: L'ensemble des statistiques du joueur avec l'ID spécifié ont été mises à jour
-        "403":
-          description: Vous n'êtes pas autorisé à modifier ces statistiques
-       "404":
-          description: L'utilisateur demandé n'a pas été trouvé
-        
-              
-    
-
 
 components:
   schemas:
@@ -185,7 +192,7 @@ components:
       properties:
         username:
           type: string
-          example: "johndoe"
+          example: 'johndoe'
         nbKills:
           type: number
           minimum: 0
