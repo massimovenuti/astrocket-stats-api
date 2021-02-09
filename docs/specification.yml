@@ -111,6 +111,71 @@ paths:
                   $ref: '#/components/schemas/userStats'
         "400":
           description: "Requête invalide : l'un des champs est incorrect"
+          
+  /stats:
+    get:
+      tags :
+        - Statistiques
+      summary: Récupère les statistiques de tous les joueurs
+      description: Permet de récupérer l'ensemble des statistiques de tous les joueurs
+      responses: 
+        "200" :
+          description: L'ensemble du classement a été récupéré et est transmis dans le corps du message
+          content:
+            json:
+              schema:
+                type: array
+                description: Ensemble des statistiques
+                items:
+                  $ref: '#/components/schemas/userStats'
+  
+          
+  /stats/{idUser}:
+    get:
+      tags:
+        - Statistiques
+      summary: Récupère les statistiques d'un utilisateur
+      description: Permet de récupérer l'ensemble des statistiques d'un utilisateur 
+      parameters: 
+        - name: idUser
+          in: path
+          description: ID de l'utilisateur recherché
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: L'ensemble des statistiques du joueur avec l'ID spécifié ont été récupérées
+          content:
+            json:
+              schema:
+                $ref: '#/components/schemas/userStats'
+        "404":
+          description: L'utilisateur demandé n'a pas été trouvé
+        
+        
+    post:
+      tags:
+        - Statistiques
+      summary: Modifie les statistiques d'un utilisateur
+      description: Permet, à la fin d'une partie de mettre à jour les statistiques d'un utilisateur précis
+      parameters: 
+        - name: idUser
+          in: path
+          description: ID de l'utilisateur recherché
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: L'ensemble des statistiques du joueur avec l'ID spécifié ont été mises à jour
+        "403":
+          description: Vous n'êtes pas autorisé à modifier ces statistiques
+       "404":
+          description: L'utilisateur demandé n'a pas été trouvé
+        
+              
+    
 
 
 components:
