@@ -1,7 +1,7 @@
 openapi: "3.0.2"
 info:
   title: Statistiques
-  description: Api pour la gestion de les statistiques des joueurs pour le projet Asteroids Warrior
+  description: API pour la gestion des statistiques joueurs pour le projet Asteroids Warrior
   version: "1.0"
 servers:
   - url: https://stats.aw.alexandre-vogel.fr/
