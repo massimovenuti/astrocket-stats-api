@@ -12,12 +12,72 @@ servers:
 #  - description : ...
 
 paths:
-  /ranking/stat?offset=<offset>&limit=<limit>:
-    get:
+  /stats:
+    post:
       tags:
         - Statistiques
+      summary: Envoie une liste de statistiques joueurs
+      description: Envoie une liste de statistiques joueurs
+      parameters:
+        - in: header
+          name: serverToken
+          schema:
+            type: string
+          required: true
+          description: Token pour identifier le serveur
+      requestBody:
+        content:
+          json:
+            schema:
+              type: array
+              description: Liste de statistiques joueurs
+              items:
+                $ref: '#/components/schemas/userStats'
+      responses:
+        "200":
+          description: Envoi réalisé avec succès
+        "403":
+          description: Vous n'êtes pas autorisé à modifier ces statistiques
+
+  /stats/{idUser}:
+    put:
+      tags:
+        - Statistiques
+      summary: Modifie les statistiques d'un joueur
+      description: Modifie les statistiques d'un joueur
+      parameters:
+        - in: header
+          name: serverToken
+          schema:
+            type: string
+          required: true
+          description: Token pour identifier le serveur
+        - in: path
+          name: idUser
+          schema:
+            type: string
+          required: true
+          description: Id du joueur dont les statistiques doivent être modifiées
+      requestBody:
+        content:
+          json:
+            schema:
+              $ref: '#/components/schemas/userStats'
+      responses:
+        "200":
+          description: Modification réalisée avec succès
+        "403":
+          description: "Vous n'êtes pas autorisé à modifier ces statistiques"
+        "404":
+          description: "L'utilisateur demandé n'a pas été trouvé"
+
+
+  /ranking/{stat}:
+    get:
+      tags:
+        - Classement
       summary: Récupère le classement des joueurs
-      description: Récupère le classement basé sur la statistique < stat > des joueurs
+      description: Récupère le classement basé sur une statistique particulière
       parameters:
         - in: path
           name: stat
@@ -105,8 +165,6 @@ components:
           type: number
           minimum: 0
           example: 23
-
-
 
 
         
