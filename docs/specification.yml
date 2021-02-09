@@ -1,0 +1,115 @@
+openapi: "3.0.2"
+info:
+  title: Statistiques
+  description: Api pour la gestion de les statistiques des joueurs pour le projet Asteroids Warrior
+  version: "1.0"
+servers:
+  - url: https://stats.aw.alexandre-vogel.fr/
+
+
+#tags:
+#  - name : ...
+#  - description : ...
+
+paths:
+  /ranking/stat?offset=<offset>&limit=<limit>:
+    get:
+      tags:
+        - Statistiques
+      summary: Récupère le classement des joueurs
+      description: Récupère le classement basé sur la statistique < stat > des joueurs
+      parameters:
+        - in: path
+          name: stat
+          schema:
+            type: string
+          required: true
+          description: Statistique sur laquelle doit être basée le classement
+        - in: query
+          name: offset
+          schema:
+            type: number
+            minimum: 1
+          required: false
+          description: Rang du premier joueur de la liste
+        - in: query
+          name: limit
+          schema:
+            type: number
+            minimum: 1
+          required: false
+          description: Taille de la liste
+      responses:
+        "200":
+          description: Le classement a été récupéré et est transmis dans le corps du message
+          content:
+            json:
+              schema:
+                type: array
+                description: Classement des joueurs
+                items: 
+                  $ref: '#/components/schemas/userStats'
+        "400":
+          description: "Requête invalide : l'un des champs est incorrect"
+
+
+components:
+  schemas:
+    userStats:
+      type: object
+      properties:
+        username:
+          type: string
+          example: "johndoe"
+        nbKills:
+          type: number
+          minimum: 0
+          example: 1021
+        nbAsteroids:
+          type: number
+          minimum: 0
+          example: 39281
+        nbPoints:
+          type: number
+          minimum: 0
+          example: 2921213
+        nbDeaths:
+          type: number
+          minimum: 0
+          example: 2012
+        nbPowerUps:
+          type: number
+          minimum: 0
+          example: 821
+        nbGames:
+          type: number
+          minimum: 0
+          example: 210
+        nbWins:
+          type: number
+          minimum: 0
+          example: 102
+        maxKills:
+          type: number
+          minimum: 0
+          example: 13
+        maxPoints:
+          type: number
+          minimum: 0
+          example: 768
+        maxPowerUps:
+          type: number
+          minimum: 0
+          example: 11
+        maxDeaths:
+          type: number
+          minimum: 0
+          example: 23
+
+
+
+
+        
+
+            
+
