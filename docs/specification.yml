@@ -34,8 +34,8 @@ paths:
     post:
       tags:
         - Statistiques
-      summary: Envoie une liste de statistiques d'utilisateurs
-      description: Envoie une liste de statistiques d'utilisateurs
+      summary: Envoie les statistiques d'une liste d'utilisateurs
+      description: Envoie les statistiques d'une liste d'utilisateurs
       parameters:
         - in: header
           name: serverToken
@@ -64,7 +64,7 @@ paths:
     get:
       tags:
         - Statistiques
-      summary: Récupère les statistiques d'un utilisateur
+      summary: Récupère les statistiques d'un utilisateur particulier
       description: Récupère les statistiques d'un utilisateur particulier
       parameters: 
         - name: username
@@ -88,7 +88,7 @@ paths:
     post:
       tags:
         - Statistiques
-      summary: Envoie les statistiques d'un utilisateur
+      summary: Envoie les statistiques d'un utilisateur particulier
       description: Envoie les statistiques d'un utilisateur particulier
       parameters: 
         - in: header
@@ -116,8 +116,8 @@ paths:
     put:
       tags:
         - Statistiques
-      summary: Modifie les statistiques d'un utilisateur
-      description: Permet de modifier les statistiques d'un utilisateur particulier
+      summary: Modifie les statistiques d'un utilisateur particulier
+      description: Modifie les statistiques d'un utilisateur particulier
       parameters:
         - in: header
           name: serverToken
