@@ -9,9 +9,9 @@ servers:
 
 tags:
   - name: Statistiques
-    description: Ensemble des fonctions liées à l'obtention, la modification et l'envoi des statistiques
+    description: Ensemble des fonctions liées à l'obtention, la modification et l'envoi des statistiques des utilisateurs
   - name: Classement
-    description: Ensemble des fonctions liées au classement des utilisateurs
+    description: Ensemble des fonctions liées à l'obtention du classement des utilisateurs
 
 paths:
   /stats:
@@ -147,12 +147,47 @@ paths:
           description: L'utilisateur demandé n'a pas été trouvé
 
 
+  /ranking:
+    get:
+      tags:
+        - Classement
+      summary: Récupère le classement des utilisateurs en fonction de leur nombre de points
+      description: Récupère le classement des utilisateurs en fonction de leur nombre de points
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: number
+            minimum: 1
+          required: false
+          description: Rang du premier utilisateur du classement
+        - in: query
+          name: limit
+          schema:
+            type: number
+            minimum: 1
+          required: false
+          description: Taille du classement
+      responses:
+        '200':
+          description: Le classement a été récupéré et est transmis dans le corps du message
+          content:
+            json:
+              schema:
+                type: array
+                description: Classement des utilisateurs
+                items: 
+                  $ref: '#/components/schemas/userStats'
+        '400':
+          description: "Requête invalide : l'un des champs est incorrect"
+        
+
   /ranking/{stat}:
     get:
       tags:
         - Classement
-      summary: Récupère le classement des utilisateurs
-      description: Récupère le classement des utilisateurs en fonction d'une statistique en particulier
+      summary: Récupère le classement des utilisateurs en fonction d'une statistique particulière
+      description: Récupère le classement des utilisateurs en fonction d'une statistique particulière
       parameters:
         - in: path
           name: stat
@@ -166,14 +201,14 @@ paths:
             type: number
             minimum: 1
           required: false
-          description: Rang du premier utilisateur de la liste
+          description: Rang du premier utilisateur du classement
         - in: query
           name: limit
           schema:
             type: number
             minimum: 1
           required: false
-          description: Taille de la liste
+          description: Taille du classement
       responses:
         '200':
           description: Le classement a été récupéré et est transmis dans le corps du message
@@ -239,9 +274,3 @@ components:
           type: number
           minimum: 0
           example: 23
-
-
-        
-
-            
-
