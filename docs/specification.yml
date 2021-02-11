@@ -7,9 +7,11 @@ servers:
   - url: https://stats.aw.alexandre-vogel.fr/
 
 
-#tags:
-#  - name : ...
-#  - description : ...
+tags:
+  - name: Statistiques
+    description: Ensemble des fonctions liées à l'obtention, la modification et l'envoi des statistiques
+  - name: Classement
+    description: Ensemble des fonctions liées au classement des utilisateurs
 
 paths:
   /stats:
@@ -58,22 +60,22 @@ paths:
           description: Vous n'êtes pas autorisé à modifier les statistiques
 
 
-  /stats/{idUser}:
+  /stats/{username}:
     get:
       tags:
         - Statistiques
       summary: Récupère les statistiques d'un utilisateur
       description: Récupère les statistiques d'un utilisateur particulier
       parameters: 
-        - name: idUser
+        - name: username
           in: path
-          description: ID de l'utilisateur
+          description: Username de l'utilisateur
           required: true
           schema:
-            type: integer
+            type: string
       responses:
         '200':
-          description: L'ensemble des statistiques utilisateur avec l'ID spécifié ont été récupérées
+          description: L'ensemble des statistiques utilisateur avec l'username spécifié ont été récupérées
           content:
             json:
               schema:
@@ -95,12 +97,12 @@ paths:
             type: string
           required: true
           description: Token pour identifier le serveur
-        - name: idUser
+        - name: username
           in: path
-          description: Id de l'utilisateur concerné
+          description: username de l'utilisateur concerné
           required: true
           schema:
-            type: integer
+            type: string
       responses:
         '200':
           description: Les statistiques ont bien été envoyées
@@ -124,11 +126,11 @@ paths:
           required: true
           description: Token pour identifier le serveur
         - in: path
-          name: idUser
+          name: username
           schema:
             type: string
           required: true
-          description: Id de l'utilisateur concerné
+          description: username de l'utilisateur concerné
       requestBody:
         content:
           json:
