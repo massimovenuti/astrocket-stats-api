@@ -31,34 +31,6 @@ paths:
                 items:
                   $ref: '#/components/schemas/userStats'
 
-    post:
-      tags:
-        - Statistiques
-      summary: Envoie les statistiques d'une liste d'utilisateurs
-      description: Envoie les statistiques d'une liste d'utilisateurs
-      parameters:
-        - in: header
-          name: serverToken
-          schema:
-            type: string
-          required: true
-          description: Token pour identifier le serveur
-      requestBody:
-        content:
-          json:
-            schema:
-              type: array
-              description: Liste de statistiques utilisateurs
-              items:
-                $ref: '#/components/schemas/userStats'
-      responses:
-        '200':
-          description: Envoi réalisé avec succès
-        '400':
-          description: 'Requête invalide : vérifiez la syntaxe'
-        '403':
-          description: Vous n'êtes pas autorisé à modifier les statistiques
-
 
   /stats/{username}:
     get:
@@ -106,39 +78,6 @@ paths:
       responses:
         '200':
           description: Les statistiques ont bien été envoyées
-        '400':
-          description: 'Requête invalide : vérifiez la syntaxe'
-        '403':
-          description: Vous n'êtes pas autorisé à modifier les statistiques
-        '404':
-          description: L'utilisateur demandé n'a pas été trouvé
-  
-    put:
-      tags:
-        - Statistiques
-      summary: Modifie les statistiques d'un utilisateur particulier
-      description: Modifie les statistiques d'un utilisateur particulier
-      parameters:
-        - in: header
-          name: serverToken
-          schema:
-            type: string
-          required: true
-          description: Token pour identifier le serveur
-        - in: path
-          name: username
-          schema:
-            type: string
-          required: true
-          description: username de l'utilisateur concerné
-      requestBody:
-        content:
-          json:
-            schema:
-              $ref: '#/components/schemas/userStats'
-      responses:
-        '200':
-          description: Modification réalisée avec succès
         '400':
           description: 'Requête invalide : vérifiez la syntaxe'
         '403':
