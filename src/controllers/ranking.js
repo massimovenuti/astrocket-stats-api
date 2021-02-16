@@ -32,7 +32,7 @@ exports.getParticularRanking = (req, res) => {
         limit = 10;
     }
 
+
     knex.select('*').from('stats').orderBy(req.params.stat).offset(offset).limit(limit);
 
-    res.status(200).json({ message: 'message reçu'});
 };
