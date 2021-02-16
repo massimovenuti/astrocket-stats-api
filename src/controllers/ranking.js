@@ -1,38 +1,56 @@
 const dbConfig = require('../config/dbConfig');
 const knex = require('knex')(dbConfig);
 
-exports.getArbitraryRanking = (req, res) => {
-    offset = req.params.offset;
+function getOffset(req) {
+    var offset = req.query.offset;
     if (!offset)
     {
         offset = 0;
     }
-    
-    limit = req.params.limit; 
+    return offset;
+}
+
+function getLimit(req) {
+    var limit = req.query.limit;
     if (!limit)
     {
-        limit = 10;
+        limit = 20;
     }
+    return limit;
+}
 
-    knex.select('*').from('stats').orderBy('nbPoints').offset(offset).limit(limit);
-
-    res.status(200).json({ message: 'message reçu'});
-};
-
-exports.getParticularRanking = (req, res) => {
-    offset = req.params.offset;
-    if (!offset)
+function getStat(req) {
+    var stat = req.params.limit;
+    if (!stat)
     {
-        offset = 0;
+        stat = 'nbPoints';
     }
-    
-    limit = req.params.limit; 
-    if (!limit)
-    {
-        limit = 10;
-    }
+    return stat;
+}
 
-
-    knex.select('*').from('stats').orderBy(req.params.stat).offset(offset).limit(limit);
-
+exports.getRanking = (req, res) => {
+    knex.select(
+            'u.username', 
+            's.nbPoints', 
+            's.nbKills', 
+            's.nbAsteroids', 
+            's.nbDeaths', 
+            's.nbPowerUps', 
+            's.nbGames', 
+            's.nbWins', 
+            's.maxKills', 
+            's.maxPoints', 
+            's.maxPowerUps', 
+            's.maxDeaths')
+        .from({ s: 'stats' })
+        .join({ u: 'users' }, 'u.idUser', 's.idUser')
+        .orderBy(getStat(req), 'desc')
+        .limit(getLimit(req))
+        .offset(getOffset(req))
+        .then(function(rows) {
+            res.status(200).json(rows);
+        })
+        .catch(function(error) {
+            res.status(400).send('Requête invalide : l\'un des champs est incorrect');
+        });
 };
