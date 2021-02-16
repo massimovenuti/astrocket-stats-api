@@ -1,4 +1,5 @@
-require('dotenv').config()
+var dotenv = require('dotenv');
+dotenv.config();
 
 module.exports = {
     client: 'mysql',

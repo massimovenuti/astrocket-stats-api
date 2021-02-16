@@ -1,13 +1,60 @@
+const { all } = require('../app');
 const dbConfig = require('../config/dbConfig');
 const knex = require('knex')(dbConfig);
 const axios = require('axios')
 
 exports.getAllStats = (req, res) => {
-
+    knex.select(
+            'idUser',
+            'nbKills',
+            'nbPoints',
+            'nbDeaths',
+            'nbPowerUps',
+            'nbGames',
+            'nbWins',
+            'maxKills',
+            'maxPoints',
+            'maxPowerUps',
+            'maxDeaths')
+        .from('stats')
+        .then(rows => {
+            res.status(200).json(rows);
+        })
+        .catch((err) => {
+            res.status(500).json("Erreur interne au serveur");
+            console.error(err);
+        })
+        .finally(() => {
+            knex.destroy();
+        });
 };
 
 exports.getOneStats = (req, res) => {
-
+    knex.select(
+            'username',
+            'nbKills',
+            'nbPoints',
+            'nbDeaths',
+            'nbPowerUps',
+            'nbGames',
+            'nbWins',
+            'maxKills',
+            'maxPoints',
+            'maxPowerUps',
+            'maxDeaths')
+        .from('stats')
+        .where({ username: req.params.username })
+        .join('users', 'users.idUser', '=', 'stats.idUser')
+        .then(rows => {
+            res.status(200).json(rows);
+        })
+        .catch((err) => {
+            res.status(500).json("Erreur interne au serveur");
+            console.error(err);
+        })
+        .finally(() => {
+            knex.destroy();
+        });
 };
 
 exports.modifyOneStats = (req, res) => {
@@ -15,7 +62,7 @@ exports.modifyOneStats = (req, res) => {
         axios.post('http://localhost:8080/server/check', {
                 token: req.headers.servertoken
             })
-            .then(function() {
+            .then(() => {
                 knex('stats').update({
                         nbPoints: req.body.nbPoints,
                         nbKills: req.body.nbKills,

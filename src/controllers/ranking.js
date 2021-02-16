@@ -39,6 +39,7 @@ exports.getRanking = (req, res) => {
             res.status(200).json(rows);
         })
         .catch(error => {
+            console.error(error);
             res.status(400).send('Requête invalide : l\'un des champs est incorrect');
         });
 };
