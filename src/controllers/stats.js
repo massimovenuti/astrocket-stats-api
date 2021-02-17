@@ -27,27 +27,38 @@ exports.getAllStats = (req, res) => {
 };
 
 exports.getOneStats = (req, res) => {
-    knex.select(
-            'username',
-            'nbKills',
-            'nbPoints',
-            'nbDeaths',
-            'nbPowerUps',
-            'nbGames',
-            'nbWins',
-            'maxKills',
-            'maxPoints',
-            'maxPowerUps',
-            'maxDeaths')
-        .from('stats')
+    knex.select('idUser')
+        .from('users')
         .where({ username: req.params.username })
-        .join('users', 'users.idUser', '=', 'stats.idUser')
-        .then(rows => {
-            res.status(200).json(rows);
+        .then((rows) => {
+            if (!rows[0]) {
+                res.status(404).send("L'utilisateur demandé n'a pas été trouvé");
+            } else {
+                knex.select(
+                        'nbKills',
+                        'nbPoints',
+                        'nbDeaths',
+                        'nbPowerUps',
+                        'nbGames',
+                        'nbWins',
+                        'maxKills',
+                        'maxPoints',
+                        'maxPowerUps',
+                        'maxDeaths')
+                    .from('stats')
+                    .where({ idUser: rows[0].idUser })
+                    .then((stats) => {
+                        res.status(200).json(stats[0]);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        res.status(500).json("Erreur interne au serveur");
+                    })
+            }
         })
-        .catch((err) => {
+        .catch((error) => {
+            console.error(error);
             res.status(500).json("Erreur interne au serveur");
-            console.error(err);
         })
 };
 
@@ -64,7 +75,6 @@ exports.modifyOneStats = (req, res) => {
                         if (!rows[0]) {
                             res.status(404).send("L'utilisateur demandé n'a pas été trouvé");
                         } else {
-
                             knex('stats').update({
                                     nbPoints: req.body.nbPoints,
                                     nbKills: req.body.nbKills,
