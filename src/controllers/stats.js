@@ -58,40 +58,50 @@ exports.getOneStats = (req, res) => {
 };
 
 exports.modifyOneStats = (req, res) => {
-    if (req.headers.servertoken) {
-        axios.post('http://localhost:8080/server/check', {
-                token: req.headers.servertoken
-            })
+    if (!req.headers.servertoken) {
+        res.status(400).send("Requête invalide : vérifiez la syntaxe");
+    } else {
+        axios.post('http://localhost:8080/server/check', { token: req.headers.servertoken })
             .then(() => {
-                knex('stats').update({
-                        nbPoints: req.body.nbPoints,
-                        nbKills: req.body.nbKills,
-                        nbAsteroids: req.body.nbAsteroids,
-                        nbDeaths: req.body.nbDeaths,
-                        nbPowerUps: req.body.nbPowerUps,
-                        nbGames: req.body.nbGames,
-                        nbWins: req.body.nbWins,
-                        maxKills: req.body.maxKills,
-                        maxPoints: req.body.maxPoints,
-                        maxPowerUps: req.body.maxPowerUps,
-                        maxDeaths: req.body.maxDeaths
+                knex.select('idUser')
+                    .from('users')
+                    .where({ username: req.params.username })
+                    .then((rows) => {
+                        if (!rows[0]) {
+                            res.status(404).send("L'utilisateur demandé n'a pas été trouvé");
+                        } else {
+
+                            knex('stats').update({
+                                    nbPoints: req.body.nbPoints,
+                                    nbKills: req.body.nbKills,
+                                    nbAsteroids: req.body.nbAsteroids,
+                                    nbDeaths: req.body.nbDeaths,
+                                    nbPowerUps: req.body.nbPowerUps,
+                                    nbGames: req.body.nbGames,
+                                    nbWins: req.body.nbWins,
+                                    maxKills: req.body.maxKills,
+                                    maxPoints: req.body.maxPoints,
+                                    maxPowerUps: req.body.maxPowerUps,
+                                    maxDeaths: req.body.maxDeaths
+                                })
+                                .where({ idUser: rows[0].idUser })
+                                .then(() => {
+                                    res.status(200).send('Modification réalisée avec succès');
+                                })
+                                .catch(error => {
+                                    console.error(error)
+                                    res.status(400).send('Requête invalide : vérifiez la syntaxe');
+                                });
+                        }
                     })
-                    .whereIn('idUser', function() {
-                        this.select('idUser').from('users');
-                    })
-                    .then(function() {
-                        res.status(200).send('Modification réalisée avec succès');
-                    })
-                    .catch(error => {
-                        console.error(error)
-                        res.status(400).send('Requête invalide : vérifiez la syntaxe');
-                    });
             })
             .catch(error => {
                 console.error(error);
                 res.status(403).send("Vous n'êtes pas autorisé à modifier les statistiques");
             })
-    } else {
-        res.status(400).send("Requête invalide : vérifiez la syntaxe");
     }
 };
+
+exports.resetOneStats = (req, res) => {
+
+}
