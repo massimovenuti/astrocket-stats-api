@@ -5,18 +5,19 @@ const axios = require('axios')
 
 exports.getAllStats = (req, res) => {
     knex.select(
-            'idUser',
-            'nbKills',
-            'nbPoints',
-            'nbDeaths',
-            'nbPowerUps',
-            'nbGames',
-            'nbWins',
-            'maxKills',
-            'maxPoints',
-            'maxPowerUps',
-            'maxDeaths')
-        .from('stats')
+            'u.username',
+            's.nbKills',
+            's.nbPoints',
+            's.nbDeaths',
+            's.nbPowerUps',
+            's.nbGames',
+            's.nbWins',
+            's.maxKills',
+            's.maxPoints',
+            's.maxPowerUps',
+            's.maxDeaths')
+        .from({ s: 'stats' })
+        .join({ u: 'users' }, 'u.idUser', 's.idUser')
         .then(rows => {
             res.status(200).json(rows);
         })
