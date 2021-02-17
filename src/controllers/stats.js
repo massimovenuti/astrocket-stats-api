@@ -24,9 +24,6 @@ exports.getAllStats = (req, res) => {
             res.status(500).json("Erreur interne au serveur");
             console.error(err);
         })
-        .finally(() => {
-            knex.destroy();
-        });
 };
 
 exports.getOneStats = (req, res) => {
@@ -52,9 +49,6 @@ exports.getOneStats = (req, res) => {
             res.status(500).json("Erreur interne au serveur");
             console.error(err);
         })
-        .finally(() => {
-            knex.destroy();
-        });
 };
 
 exports.modifyOneStats = (req, res) => {
