@@ -9,7 +9,7 @@ servers:
 
 tags:
   - name: Statistiques
-    description: Ensemble des fonctions liées à l'obtention, la modification et l'envoi des statistiques des utilisateurs
+    description: Ensemble des fonctions liées à l'obtention et la modification des statistiques des utilisateurs
   - name: Classement
     description: Ensemble des fonctions liées à l'obtention du classement des utilisateurs
 
@@ -19,7 +19,7 @@ paths:
       tags :
         - Statistiques
       summary: Récupère les statistiques de tous les utilisateurs
-      description: Récupère les statistiques de tous les utilisateurs
+      description: Récupère les statistiques de tous les utilisateurs.
       responses: 
         '200':
           description: L'ensemble du classement a été récupéré et est transmis dans le corps du message
@@ -37,7 +37,7 @@ paths:
       tags:
         - Statistiques
       summary: Récupère les statistiques d'un utilisateur particulier
-      description: Récupère les statistiques d'un utilisateur particulier
+      description: Récupère les statistiques d'un utilisateur particulier.
       parameters: 
         - name: username
           in: path
@@ -60,8 +60,11 @@ paths:
     post:
       tags:
         - Statistiques
-      summary: Envoie les statistiques d'un utilisateur particulier
-      description: Envoie les statistiques d'un utilisateur particulier
+      summary: Modifie les statistiques d'un utilisateur particulier
+      description: |
+                    Modifie les statistiques d'un utilisateur particulier : les statistiques 
+                    renseignées dans le corps de la requête seront additionnées à celles 
+                    existantes pour l'utilisateur concerné.
       parameters: 
         - in: header
           name: serverToken
@@ -69,15 +72,45 @@ paths:
             type: string
           required: true
           description: Token pour identifier le serveur
-        - name: username
-          in: path
-          description: username de l'utilisateur concerné
-          required: true
+        - in: path
+          name: username
           schema:
             type: string
+          required: true
+          description: Nom de l'utilisateur concerné
       responses:
         '200':
           description: Les statistiques ont bien été envoyées
+        '400':
+          description: 'Requête invalide : vérifiez la syntaxe'
+        '403':
+          description: Vous n'êtes pas autorisé à modifier les statistiques
+        '404':
+          description: L'utilisateur demandé n'a pas été trouvé
+
+    delete:
+      tags:
+        - Statistiques
+      summary: Réinitialise les statistiques d'un utilisateur particulier
+      description: |
+                    Réinitialise les statistiques d'un utilisateur particulier : les statistiques 
+                    de l'utilisateur concerné seront remises à 0.
+      parameters:
+        - in: header
+          name: serverToken
+          schema:
+            type: string
+          required: true
+          description: Token pour identifier le serveur
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          description: Nom de l'utilisateur concerné
+      responses:
+        '200':
+          description: Les statistiques ont bien été réinitialisées
         '400':
           description: 'Requête invalide : vérifiez la syntaxe'
         '403':
@@ -91,7 +124,7 @@ paths:
       tags:
         - Classement
       summary: Récupère le classement des utilisateurs en fonction de leur nombre de points
-      description: Récupère le classement des utilisateurs en fonction de leur nombre de points
+      description: Récupère le classement des utilisateurs en fonction de leur nombre de points.
       parameters:
         - in: query
           name: offset
@@ -126,7 +159,7 @@ paths:
       tags:
         - Classement
       summary: Récupère le classement des utilisateurs en fonction d'une statistique particulière
-      description: Récupère le classement des utilisateurs en fonction d'une statistique particulière
+      description: Récupère le classement des utilisateurs en fonction d'une statistique particulière.
       parameters:
         - in: path
           name: stat
