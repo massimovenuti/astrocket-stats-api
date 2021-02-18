@@ -202,6 +202,10 @@ components:
         username:
           type: string
           example: 'johndoe'
+        nbPoints:
+          type: number
+          minimum: 0
+          example: 2921213
         nbKills:
           type: number
           minimum: 0
@@ -210,10 +214,6 @@ components:
           type: number
           minimum: 0
           example: 39281
-        nbPoints:
-          type: number
-          minimum: 0
-          example: 2921213
         nbDeaths:
           type: number
           minimum: 0
