@@ -94,10 +94,14 @@ exports.modifyOneStats = (req, res) => {
                                     res.status(200).send('Modification réalisée avec succès');
                                 })
                                 .catch(error => {
-                                    console.error(error)
+                                    console.error(error);
                                     res.status(400).send('Requête invalide : vérifiez la syntaxe');
                                 });
                         }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        res.status(500).json("Erreur interne au serveur");
                     })
             })
             .catch(error => {
@@ -114,22 +118,26 @@ exports.resetOneStats = (req, res) => {
         axios.post('http://localhost:8080/server/check', { token: req.headers.servertoken })
             .then(() => {
                 knex.select('idUser')
-                .from('users')
-                .where({ username: req.params.username })
-                .then((rows) => {   
-                    if (!rows[0]) {
-                        res.status(404).send("L'utilisateur demandé n'a pas été trouvé");
-                    } else {             
-                        knex.raw('replace into stats set idUser = ?',rows[0].idUser)
-                        .then(() => {
-                            res.status(200).send('Les statistiques ont bien été réinitialisées');
-                        })
-                        .catch(error => {
-                            console.error(error);
-                            res.status(400).send('Requête invalide : vérifiez la syntaxe');
-                        });
-                    }
-                })
+                    .from('users')
+                    .where({ username: req.params.username })
+                    .then((rows) => {
+                        if (!rows[0]) {
+                            res.status(404).send("L'utilisateur demandé n'a pas été trouvé");
+                        } else {
+                            knex.raw('replace into stats set idUser = ?', rows[0].idUser)
+                                .then(() => {
+                                    res.status(200).send('Les statistiques ont bien été réinitialisées');
+                                })
+                                .catch(error => {
+                                    console.error(error);
+                                    res.status(400).send('Requête invalide : vérifiez la syntaxe');
+                                });
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        res.status(500).json("Erreur interne au serveur");
+                    })
             })
             .catch(error => {
                 console.error(error);
