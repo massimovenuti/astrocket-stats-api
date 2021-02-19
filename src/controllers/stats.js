@@ -47,7 +47,6 @@ exports.getOneStats = (req, res) => {
         .from('users')
         .where({ username: req.params.username })
         .then((rows) => {
-            console.log(length(rows))
             if (!rows[0]) {
                 res.status(404).send("L'utilisateur demandé n'a pas été trouvé");
             } else {
