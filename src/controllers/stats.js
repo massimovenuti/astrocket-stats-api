@@ -3,11 +3,26 @@ const dbConfig = require('../config/dbConfig');
 const knex = require('knex')(dbConfig);
 const axios = require('axios')
 
+function checkUserStats(userStats) {
+    return !isNaN(userStats.nbKills) ||
+        !isNaN(userStats.nbPoints) ||
+        !isNaN(userStats.nbAsteroids) ||
+        !isNaN(userStats.nbDeaths) ||
+        !isNaN(userStats.nbPowerUps) ||
+        !isNaN(userStats.nbGames) ||
+        !isNaN(userStats.nbWins) ||
+        !isNaN(userStats.maxKills) ||
+        !isNaN(userStats.maxPoints) ||
+        !isNaN(userStats.maxPowerUps) ||
+        !isNaN(userStats.maxDeaths);
+}
+
 exports.getAllStats = (req, res) => {
     knex.select(
             'u.username',
             's.nbKills',
             's.nbPoints',
+            's.nbAsteroids',
             's.nbDeaths',
             's.nbPowerUps',
             's.nbGames',
@@ -24,7 +39,7 @@ exports.getAllStats = (req, res) => {
         .catch((err) => {
             res.status(500).json("Erreur interne au serveur");
             console.error(err);
-        })
+        });
 };
 
 exports.getOneStats = (req, res) => {
@@ -32,12 +47,14 @@ exports.getOneStats = (req, res) => {
         .from('users')
         .where({ username: req.params.username })
         .then((rows) => {
+            console.log(length(rows))
             if (!rows[0]) {
                 res.status(404).send("L'utilisateur demandé n'a pas été trouvé");
             } else {
                 knex.select(
                         'nbKills',
                         'nbPoints',
+                        'nbAsteroids',
                         'nbDeaths',
                         'nbPowerUps',
                         'nbGames',
@@ -60,11 +77,11 @@ exports.getOneStats = (req, res) => {
         .catch((error) => {
             console.error(error);
             res.status(500).json("Erreur interne au serveur");
-        })
+        });
 };
 
 exports.modifyOneStats = (req, res) => {
-    if (!req.headers.servertoken) {
+    if (!req.headers.servertoken || !checkUserStats(req.body)) {
         res.status(400).send("Requête invalide : vérifiez la syntaxe");
     } else {
         axios.post('http://localhost:8080/server/check', { token: req.headers.servertoken })
@@ -95,19 +112,23 @@ exports.modifyOneStats = (req, res) => {
                                 })
                                 .catch(error => {
                                     console.error(error);
-                                    res.status(400).send('Requête invalide : vérifiez la syntaxe');
+                                    res.status(500).json("Erreur interne au serveur");
                                 });
                         }
                     })
                     .catch(error => {
                         console.error(error);
                         res.status(500).json("Erreur interne au serveur");
-                    })
+                    });
             })
             .catch(error => {
                 console.error(error);
-                res.status(403).send("Vous n'êtes pas autorisé à modifier les statistiques");
-            })
+                if (error.response && error.response.status == 400) {
+                    res.status(403).send("Vous n'êtes pas autorisé à modifier les statistiques");
+                } else {
+                    res.status(500).json("Erreur interne au serveur");
+                }
+            });
     }
 };
 
@@ -130,18 +151,22 @@ exports.resetOneStats = (req, res) => {
                                 })
                                 .catch(error => {
                                     console.error(error);
-                                    res.status(400).send('Requête invalide : vérifiez la syntaxe');
+                                    res.status(500).json("Erreur interne au serveur");
                                 });
                         }
                     })
                     .catch(error => {
                         console.error(error);
                         res.status(500).json("Erreur interne au serveur");
-                    })
+                    });
             })
             .catch(error => {
                 console.error(error);
-                res.status(403).send("Vous n'êtes pas autorisé à modifier les statistiques");
-            })
+                if (error.response && error.response.status == 400) {
+                    res.status(403).send("Vous n'êtes pas autorisé à modifier les statistiques");
+                } else {
+                    res.status(500).json("Erreur interne au serveur");
+                }
+            });
     }
 };

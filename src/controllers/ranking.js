@@ -2,23 +2,29 @@ const { off } = require('../app');
 const dbConfig = require('../config/dbConfig');
 const knex = require('knex')(dbConfig);
 
+function checkStat(stat) {
+    return [
+            'nbKills',
+            'nbPoints',
+            'nbAsteroids',
+            'nbDeaths',
+            'nbPowerUps',
+            'nbGames',
+            'nbWins',
+            'maxKills',
+            'maxPoints',
+            'maxPowerUps',
+            'maxDeaths'
+        ]
+        .indexOf(stat) >= 0;
+}
+
 exports.getRanking = (req, res) => {
-    var stat = req.params.stat;
-    if (!stat) {
-        stat = 'nbPoints';
-    }
+    var limit = req.params.limit ? req.params.limit : 30;
+    var offset = req.params.offset ? req.params.offset : 0;
+    var stat = req.params.stat ? req.params.stat : 'nbKills';
 
-    var limit = req.query.limit;
-    if (!limit) {
-        limit = 20;
-    }
-
-    var offset = req.query.offset;
-    if (!offset) {
-        offset = 0;
-    }
-
-    if (isNaN(offset) || isNaN(limit)) {
+    if (!checkStat(stat) || isNaN(offset) || isNaN(limit)) {
         res.status(400).send('Requête invalide : l\'un des champs est incorrect');
     } else {
         knex.select(
@@ -44,7 +50,7 @@ exports.getRanking = (req, res) => {
             })
             .catch(error => {
                 console.error(error);
-                res.status(400).send('Requête invalide : l\'un des champs est incorrect');
+                res.status(500).json("Erreur interne au serveur");
             });
     }
 };
