@@ -30,6 +30,8 @@ paths:
                 description: Ensemble des statistiques
                 items:
                   $ref: '#/components/schemas/userStats'
+        '500':
+          description: "Erreur interne au serveur"
 
 
   /stats/{username}:
@@ -56,6 +58,8 @@ paths:
           description: 'Requête invalide : vérifiez la syntaxe'
         '404':
           description: L'utilisateur demandé n'a pas été trouvé
+        '500':
+          description: "Erreur interne au serveur"
 
     post:
       tags:
@@ -87,6 +91,8 @@ paths:
           description: Vous n'êtes pas autorisé à modifier les statistiques
         '404':
           description: L'utilisateur demandé n'a pas été trouvé
+        '500':
+          description: "Erreur interne au serveur"
 
     delete:
       tags:
@@ -117,6 +123,8 @@ paths:
           description: Vous n'êtes pas autorisé à modifier les statistiques
         '404':
           description: L'utilisateur demandé n'a pas été trouvé
+        '500':
+          description: "Erreur interne au serveur"
 
 
   /ranking:
@@ -152,6 +160,8 @@ paths:
                   $ref: '#/components/schemas/userStats'
         '400':
           description: "Requête invalide : l'un des champs est incorrect"
+        '500':
+          description: "Erreur interne au serveur"
         
 
   /ranking/{stat}:
@@ -193,6 +203,8 @@ paths:
                   $ref: '#/components/schemas/userStats'
         '400':
           description: "Requête invalide : l'un des champs est incorrect"
+        '500':
+          description: "Erreur interne au serveur"
 
 components:
   schemas:
