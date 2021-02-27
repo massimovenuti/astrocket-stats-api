@@ -26,10 +26,8 @@ paths:
           content:
             json:
               schema:
-                type: array
                 description: Ensemble des statistiques
-                items:
-                  $ref: '#/components/schemas/userStats'
+                $ref: '#/components/schemas/arrayOfUserStats'
         '500':
           description: "Erreur interne au serveur"
 
@@ -154,10 +152,8 @@ paths:
           content:
             json:
               schema:
-                type: array
                 description: Classement des utilisateurs
-                items: 
-                  $ref: '#/components/schemas/userStats'
+                $ref: '#/components/schemas/arrayOfUserStats'
         '400':
           description: "Requête invalide : l'un des champs est incorrect"
         '500':
@@ -197,10 +193,8 @@ paths:
           content:
             json:
               schema:
-                type: array
                 description: Classement des utilisateurs
-                items: 
-                  $ref: '#/components/schemas/userStats'
+                $ref: '#/components/schemas/arrayOfUserStats'
         '400':
           description: "Requête invalide : l'un des champs est incorrect"
         '500':
@@ -213,48 +207,79 @@ components:
       properties:
         username:
           type: string
-          example: 'johndoe'
         nbPoints:
           type: number
           minimum: 0
-          example: 2921213
         nbKills:
           type: number
           minimum: 0
-          example: 1021
         nbAsteroids:
           type: number
           minimum: 0
-          example: 39281
         nbDeaths:
           type: number
           minimum: 0
-          example: 2012
         nbPowerUps:
           type: number
           minimum: 0
-          example: 821
         nbGames:
           type: number
           minimum: 0
-          example: 210
         nbWins:
           type: number
           minimum: 0
-          example: 102
         maxKills:
           type: number
           minimum: 0
-          example: 13
         maxPoints:
           type: number
           minimum: 0
-          example: 768
         maxPowerUps:
           type: number
           minimum: 0
-          example: 11
         maxDeaths:
           type: number
           minimum: 0
-          example: 23
+      example:
+        username: toto
+        nbPoints: 2921213
+        nbKills: 1021
+        nbAsteroids: 39281
+        nbDeaths: 2012
+        nbPowerUps: 821
+        nbGames: 210
+        nbWins: 102
+        maxKills: 13
+        maxPoints: 768
+        maxPowerUps: 11
+        maxDeaths: 23
+
+    arrayOfUserStats:
+      type: array
+      items:
+        $ref: '#/components/schemas/userStats'
+      example:
+        - username: toto
+          nbPoints: 2921213
+          nbKills: 1021
+          nbAsteroids: 39281
+          nbDeaths: 2012
+          nbPowerUps: 821
+          nbGames: 210
+          nbWins: 102
+          maxKills: 13
+          maxPoints: 768
+          maxPowerUps: 11
+          maxDeaths: 23
+        - username: titi
+          nbPoints: 221513
+          nbKills: 121
+          nbAsteroids: 9281
+          nbDeaths: 212
+          nbPowerUps: 321
+          nbGames: 100
+          nbWins: 42
+          maxKills: 9
+          maxPoints: 421
+          maxPowerUps: 6
+          maxDeaths: 26
