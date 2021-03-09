@@ -80,8 +80,6 @@ paths:
             json:
               schema:
                 $ref: '#/components/schemas/userStats'
-        '400':
-          description: 'Requête invalide : vérifiez la syntaxe'
         '404':
           description: L'utilisateur demandé n'a pas été trouvé
 
