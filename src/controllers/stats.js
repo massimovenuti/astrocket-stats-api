@@ -48,7 +48,7 @@ exports.getOneStats = (req, res) => {
         .where({ username: req.params.username })
         .then((rows) => {
             if (!rows[0]) {
-                res.status(404).send("L'utilisateur demandé n'a pas été trouvé");
+                res.status(404).json("L'utilisateur demandé n'a pas été trouvé");
             } else {
                 knex.select(
                         'nbKills',
@@ -90,7 +90,7 @@ exports.modifyOneStats = (req, res) => {
                     .where({ username: req.params.username })
                     .then((rows) => {
                         if (!rows[0]) {
-                            res.status(404).send("L'utilisateur demandé n'a pas été trouvé");
+                            res.status(404).json("L'utilisateur demandé n'a pas été trouvé");
                         } else {
                             knex('stats').update({
                                     nbPoints: req.body.nbPoints,
@@ -107,7 +107,7 @@ exports.modifyOneStats = (req, res) => {
                                 })
                                 .where({ idUser: rows[0].idUser })
                                 .then(() => {
-                                    res.status(200).send('Modification réalisée avec succès');
+                                    res.status(200).json('Modification réalisée avec succès');
                                 })
                                 .catch(error => {
                                     console.error(error);
@@ -123,7 +123,7 @@ exports.modifyOneStats = (req, res) => {
             .catch(error => {
                 console.error(error);
                 if (error.response && error.response.status == 400) {
-                    res.status(403).send("Vous n'êtes pas autorisé à modifier les statistiques");
+                    res.status(403).json("Vous n'êtes pas autorisé à modifier les statistiques");
                 } else {
                     res.status(500).json("Erreur interne au serveur");
                 }
@@ -142,11 +142,11 @@ exports.resetOneStats = (req, res) => {
                     .where({ username: req.params.username })
                     .then((rows) => {
                         if (!rows[0]) {
-                            res.status(404).send("L'utilisateur demandé n'a pas été trouvé");
+                            res.status(404).json("L'utilisateur demandé n'a pas été trouvé");
                         } else {
                             knex.raw('replace into stats set idUser = ?', rows[0].idUser)
                                 .then(() => {
-                                    res.status(200).send('Les statistiques ont bien été réinitialisées');
+                                    res.status(200).json('Les statistiques ont bien été réinitialisées');
                                 })
                                 .catch(error => {
                                     console.error(error);
@@ -162,7 +162,7 @@ exports.resetOneStats = (req, res) => {
             .catch(error => {
                 console.error(error);
                 if (error.response && error.response.status == 400) {
-                    res.status(403).send("Vous n'êtes pas autorisé à modifier les statistiques");
+                    res.status(403).json("Vous n'êtes pas autorisé à modifier les statistiques");
                 } else {
                     res.status(500).json("Erreur interne au serveur");
                 }
