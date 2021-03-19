@@ -2,3 +2,5 @@ src/node_modules
 src/.env
 src/*.log
 src/*.json
+src/keys/stats_server.crt
+src/keys/stats_server.key
