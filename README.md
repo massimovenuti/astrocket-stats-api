@@ -1,4 +1,4 @@
-# API de Statistiques
+# Astrocket - API de statistiques
 
 ## Description
 
